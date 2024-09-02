@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "ESP32_CAR",
+			"path": "ESP32_CAR"
+		}
+	],
+	"settings": {}
+}
