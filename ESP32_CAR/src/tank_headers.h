@@ -1,0 +1,90 @@
+// motors control pins
+// each motor gets 2 pins: one stable,one via PAM
+#define M1_IN1_pin   18 
+#define M1_IN2_pin   5
+#define M2_IN1_pin   23 
+#define M2_IN2_pin   19 
+
+const int PWM_Channel0 = 0;
+const int PWM_Channel1 = 1;
+const int PWM_Channel2 = 2;
+const int PWM_Channel3 = 3;
+
+
+/*
+#define AIN1_pin     26 // D2
+#define BIN1_pin     14 // D1
+#define AIN2_pin     25 // D3
+#define BIN2_pin     12 //   (was GPIO3 (RX) changes to GPIO12  D6
+#define PWMA_pin     33 // D7
+#define PWMB_pin     13 // TX - changed
+#define STBY_pin     27 // D5 , when low, all stop, low current consumption
+*/
+#define LED_MOV_pin  15 // D4 , when the tank is moving, on board LED
+//#define Spare_LED    15 // D8, currently not in use
+#define BUZZER_pin  19 
+
+
+#define F_TRIG_PIN  32
+#define F_ECHO_PIN  35
+#define B_TRIG_PIN  21
+#define B_ECHO_PIN  34
+#define R_TRIG_PIN  23
+#define R_ECHO_PIN  36
+#define L_TRIG_PIN  4
+#define L_ECHO_PIN  16
+
+#define F_SERVO_PWM_PIN 22
+#define B_SERVO_PWM_PIN 18
+#define R_SERVO_PWM_PIN 5
+#define L_SERVO_PWM_PIN 17
+
+
+const int trig1 = 32;
+
+const int JUNK_VAL = 7777;
+const int DIST_BUFF_SIZE = 20;
+const int VERY_CLOSE = 23;
+const int CLOSE = 23;
+const int IN_RANGE = 40;
+const int MIN_SPEED = 120; // was 120
+const int MAX_SPEED = 1023; // MAX is 1023
+const int SPEED_INC = 50;
+const int TIME_IN_STATION = 1500;
+const int SAMPLE_TIME = 200; // time for loop to wait between each cycle
+const int MAX_DISTANCE = 99;
+
+
+const int LEFT  = 0;
+const int RIGHT = 1;
+const int FORWARD = 0;
+const int BACKARD = 0;
+
+// for DC motors
+// for Esp32 (DIFFERENT THAN ESPP8266/WEMOS)
+// setting PWM properties
+const int MOTOR_FREQ = 5000;
+const int SERVO_FREQ = 50;
+
+const int PWM_RESOLUTION = 8; // 10 bit resulation: speed until 1023 . Maybe 8? 
+const int min_PWM = 0;
+//int max_PWM = pow(2, PWM_RESOLUTION)-1;
+
+const int SERVO_RANGE = 255; // pow(2,PWM_REOLUTION); // 255 ; // because 8 bit 
+
+// for Servo motors
+const int F_SERVO_Channel = 2;
+const int B_SERVO_Channel = 3;
+const int R_SERVO_Channel = 4;
+const int L_SERVO_Channel = 5;
+
+
+
+
+
+const int ZERO  = 0;
+//const int LEFT_DIR  = 1; // it should have been like LEFT & RIGHT, but sto match the  real engine direction.
+//const int RIGHT_DIR = 0;
+
+const bool fixed_speed = false; // True: speed is fixed or stopped. False: speed changes (slower or faster)
+const bool DEBUG_MODE = true; // when true, printing debug statemens
