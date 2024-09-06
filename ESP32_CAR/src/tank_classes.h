@@ -1,172 +1,13 @@
-#include<tank_headers.h>
+//#include <tank_headers.h>
+#include <motors.h>
+
 #include "WiFi.h"
 //#include <ESP32Servo.h>
 //#include <NewPing.h>
 //#include<ESP8266WiFi.h>
 #include <i2c_devices.h>
+#include <ESP32Servo.h>
 
-
-
-
-// ______________________ class MOTOR ___________________________
-class Motor {
-  public:
-  int motor_en1;
-  // int motor_en2; with TA6586 only one EN pin is needed (and PWM)
-  //int motor_pwm;    // for ESP8266 style
-  
-  int speed = 0; // in work, to use as the speed of the train instead of global variable
-  int direction = FORWARD;
-  int distance = 0;
-  // 2 Sep 24
-  int pwm_channelA; // each motor has 2 channels, because 2 PWM signals with differentduty cycles 
-  int pwm_channelB;  
-  int motor_pwm1_pin;  // each motor has 2 control pins, both PWM 
-  int motor_pwm2_pin;   // one is "real" pwm (change speed), the other fixed to 0 or 100%
-   
-  
-  void init(int _pwm_pin1,  int _pwm_pin2, int _channel1, int _channel2) {
-    // Sep 2024: Since the PWM pin is changing between directions, 
-    // I wlll try using both as PWM. One at 100% (so fixed) and the other cganging speed
-    // _pwm for ESp8266 style
-    // _pwm_channel for esp32 style
-    motor_pwm1_pin = _pwm_pin1;
-    motor_pwm2_pin = _pwm_pin2;
-    pwm_channelA = _channel1;
-    pwm_channelB = _channel2;
-
-  //ledcSetup(L_PWM_Channel, MOTOR_FREQ, PWM_REOLUTION);
-    ledcSetup(pwm_channelA, MOTOR_FREQ, PWM_RESOLUTION);
-    ledcAttachPin(motor_pwm1_pin, pwm_channelA);
-    ledcSetup(pwm_channelB, MOTOR_FREQ, PWM_RESOLUTION);
-    ledcAttachPin(motor_pwm2_pin, pwm_channelB);
-   
-    speed=0;
-  } // of INIT routine
-
-  void test_motor() {
-    Serial.println("testing motor forward");
-    for (int i = min_PWM;i<255;i+=25) {
-        Serial.println(i);
-        Serial.println(" . ");
-        ledcWrite(pwm_channelA, i);
-        ledcWrite(pwm_channelB, min_PWM);
-        
-        delay(500);
-    } // of for loop
-    ledcWrite(pwm_channelA, min_PWM);
-    delay(1000);
-    Serial.println("testing motor Backwards");
-    for (int i = min_PWM;i<255;i+=25) {
-        Serial.println(i);
-        Serial.println(" . ");
-        ledcWrite(pwm_channelA, min_PWM);
-        ledcWrite(pwm_channelB, i);
-        
-        delay(500);
-    } // of for loop
-    ledcWrite(pwm_channelB, min_PWM);
-    Serial.println("testing motor Backwards");
-
-  } // of test_motor()
-
-
-  void Go_forward ( int _speed_) {
-    Serial.println("");
-    Serial.print("---->  In go FW   _speed_:");
-    Serial.print(_speed_);
-    Serial.print("   pwm_channels: ");
-    Serial.println(pwm_channelA,pwm_channelB);
-
-    speed = _speed_; // set the class global value
-
-    ledcWrite(pwm_channelA, speed);
-    ledcWrite(pwm_channelB, speed);
-  } // of Go_forward
-
-
-  void Go_backward ( int _speed_) {
-    Serial.println("");
-    Serial.print("---->  In go BW   _speed_:");
-    Serial.print(_speed_);
-    Serial.print("   pwm_channels: ");
-    Serial.println(pwm_channelA,pwm_channelB);
-
-    speed = _speed_; // set the class global value
-
-    ledcWrite(pwm_channelA, speed);
-    ledcWrite(pwm_channelB, speed);
-  } // of Go_backward()
-
-
-
-    void Go_left(int _l_speed, int _r_speed) {
-        ledcWrite(pwm_channelA, _l_speed);
-        ledcWrite(pwm_channelB, _r_speed);
-  }
-
-    void Go_right(int _l_speed, int _r_speed) {
-        ledcWrite(pwm_channelA, _l_speed);
-        ledcWrite(pwm_channelB, _r_speed);
-  }
-
-  void Go_pivot_left(int _speed) {
-        ledcWrite(pwm_channelA, _speed);
-        ledcWrite(pwm_channelB, min_PWM);
-  }
-
-  void Go_pivot_right(int _speed) {
-        ledcWrite(pwm_channelA, min_PWM);
-        ledcWrite(pwm_channelB, _speed);
-  }
-    
-  void stop () {
-      speed = ZERO;
-      //analogWrite(motor_pwm,  ZERO);
-      ledcWrite(pwm_channelA, min_PWM);
-      ledcWrite(pwm_channelB, min_PWM);
-      
-    } // of STOP routine
-
-
-    // ****************** increase_speed **********************
-    void increase_speed() {
-
-      if (fixed_speed) {
-        speed = MAX_SPEED;
-        return; // speed is not changing
-      }
-        
-      // speed is not fixed
-      speed += SPEED_INC;
-      if (speed > MAX_SPEED) {
-        speed = MAX_SPEED;
-      }
-        
-    }
-    // ****************** decrease_speed **********************
-    void decrease_speed() {
-      if (fixed_speed) {
-        speed = MAX_SPEED;
-        return; // speed is not changing
-      }
-        
-
-      speed -= SPEED_INC;
-      if (speed < MIN_SPEED) {
-        speed = MIN_SPEED;
-      }
-        
-    }
-
-// ****************** SLOW_DOWN **********************
-void slow_down() {
-  if (fixed_speed)
-    return; // speed is not changing
-  speed = MIN_SPEED;
-} // of SLOW DOWN
-
-};  // of Motor class
 
 
 
@@ -189,10 +30,55 @@ class us_Servo {
     ledcAttachPin(s_pin, s_channel);
   }
 
-  void write_angle(int _value) {
-     ledcWrite(s_channel, _value);
+  void write_angle(int _angle) {
+      int val = map(_angle,0,180,0,255);
+     ledcWrite(s_channel, val);
+     Serial.println("");
+     Serial.print("  Angle: ");
+     Serial.print(_angle);
+     Serial.print("  value: ");
+     Serial.print(val);
+    Serial.print("  Channel: ");
+     Serial.print(s_channel);
+     Serial.print("  Pin: ");
+    Serial.print(s_pin);
+    Serial.print("  Freq: ");
+    Serial.print(s_freq);
+    Serial.print("  resolution: ");
+     Serial.println(s_resolution);
+     
+    
   }
 
+  void test_servo() {
+    Serial.println("testing Servo");
+    Serial.print("   Channel: ");
+    Serial.print(s_channel);
+    Serial.print("   pin: ");
+    Serial.print(s_pin);
+    Serial.print("   freq: ");
+    Serial.print(s_freq);
+    Serial.print("   Resolution: ");
+    Serial.println(s_resolution);
+
+  Serial.println("Angle:");
+    
+    
+  
+    for (int angle=10;angle<180;angle+=20) {
+      write_angle(angle);
+      //Serial.print(angle);
+      //Serial.print(" . ");
+      delay(1000);
+    } // of for loop
+
+    for (int angle=170;angle>0;angle-=20) {
+      write_angle(angle);
+      //Serial.print(angle);
+      //Serial.print(" . ");
+      delay(1000);
+    } // of for loop
+  }
 
   
 }; // of class us_servo
@@ -250,12 +136,8 @@ class Tank {
   // 2 Sep 24
   i2c_devices i2c_devs;
 
-    //I2C_devices dev;
+    
 
-  //Servo f_servo; //initialize a servo object
-  //Servo b_servo; //initialize a servo object
-  //Servo r_servo; //initialize a servo object
-  //Servo l_servo; //initialize a servo object
   
   US_Sensor f_sensor;
   US_Sensor b_sensor;
@@ -274,29 +156,14 @@ class Tank {
   void tank_init_motors(int _in1_pin,int _in2_pin,int _chan_a,int _chan_b,int _in3_pin,int _in4_pin ,int _chan_c,int _chan_d) {  
     left_motor.init(_in1_pin,_in2_pin,_chan_a,_chan_b);
     right_motor.init(_in3_pin,_in4_pin,_chan_c,_chan_d);
-    // the pwm_pin is for ESp8266/WEMOS style, pwm_channel is for ESP32 style    
-
-    
   }
 
- 
-
-  void tank_init_servos(int _F_SERVO_PWM, int _B_SERVO_PWM, int _R_SERVO_PWM, int _L_SERVO_PWM) {
-    f_servo.init(F_SERVO_Channel,F_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-    b_servo.init(B_SERVO_Channel,B_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-    r_servo.init(R_SERVO_Channel,R_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-    l_servo.init(L_SERVO_Channel,L_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-
-
-    //ledcSetup(F_SERVO_Channel, freq, resolution);
-    //ledcAttachPin(F_SERVO_PWM_PIN, F_SERVO_Channel);
-    //ledcWrite(F_SERVO_Channel, 255);
-
-    //f_servo.attach(F_SERVO_PWM); // connect the servo with GPIO
-    // b_servo.attach(B_SERVO_PWM); // connect the servo with GPIO
-    // r_servo.attach(R_SERVO_PWM); // connect the servo with GPIO
-    // l_servo.attach(L_SERVO_PWM); // connect the servo with GPIO
-  }
+   void tank_init_servos() {
+    f_servo.init(F_Servo_PWM_Channel,F_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
+    b_servo.init(B_Servo_PWM_Channel,B_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
+    r_servo.init(R_Servo_PWM_Channel,R_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
+    l_servo.init(L_Servo_PWM_Channel,L_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
+  } // of tank_init_servos()
 
   void tank_init_us_sensors() {
     f_sensor.init(F_TRIG_PIN,F_ECHO_PIN);

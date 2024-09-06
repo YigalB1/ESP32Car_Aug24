@@ -19,7 +19,7 @@ class i2c_devices{
       i2c_ext.pinMode(P6,OUTPUT); // LED4
       i2c_ext.pinMode(P7,OUTPUT); // LED5
 
-      for (int i=0;i<3;i++) {
+      for (int i=0;i<1;i++) {
           Led1_Off();
           Led2_Off();
           Led3_Off();

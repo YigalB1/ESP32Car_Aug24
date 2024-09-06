@@ -1,5 +1,6 @@
+
 // motors control pins
-// each motor gets 2 pins: one stable,one via PAM
+// each motor gets 2 pins: one stable (also controlled by PWM),one via PAM
 #define M1_IN1_pin   18 
 #define M1_IN2_pin   5
 #define M2_IN1_pin   23 
@@ -9,38 +10,38 @@ const int PWM_Channel0 = 0;
 const int PWM_Channel1 = 1;
 const int PWM_Channel2 = 2;
 const int PWM_Channel3 = 3;
+const int F_Servo_PWM_Channel = 4;
+const int B_Servo_PWM_Channel = 5;
+const int R_Servo_PWM_Channel = 6;
+const int L_Servo_PWM_Channel = 7;
 
-
-/*
-#define AIN1_pin     26 // D2
-#define BIN1_pin     14 // D1
-#define AIN2_pin     25 // D3
-#define BIN2_pin     12 //   (was GPIO3 (RX) changes to GPIO12  D6
-#define PWMA_pin     33 // D7
-#define PWMB_pin     13 // TX - changed
-#define STBY_pin     27 // D5 , when low, all stop, low current consumption
-*/
 #define LED_MOV_pin  15 // D4 , when the tank is moving, on board LED
 //#define Spare_LED    15 // D8, currently not in use
 #define BUZZER_pin  19 
 
 
-#define F_TRIG_PIN  32
-#define F_ECHO_PIN  35
-#define B_TRIG_PIN  21
-#define B_ECHO_PIN  34
-#define R_TRIG_PIN  23
-#define R_ECHO_PIN  36
-#define L_TRIG_PIN  4
-#define L_ECHO_PIN  16
+#define F_TRIG_PIN  27
+#define F_ECHO_PIN  34
+#define B_TRIG_PIN  12
+#define B_ECHO_PIN  13
+#define R_TRIG_PIN   2
+#define R_ECHO_PIN  14
+#define L_TRIG_PIN  15
+#define L_ECHO_PIN  35
 
-#define F_SERVO_PWM_PIN 22
-#define B_SERVO_PWM_PIN 18
-#define R_SERVO_PWM_PIN 5
-#define L_SERVO_PWM_PIN 17
+#define F_SERVO_PWM_PIN 32
+#define B_SERVO_PWM_PIN 33
+#define R_SERVO_PWM_PIN 25
+#define L_SERVO_PWM_PIN 26
+
+// for Servo motors
+//const int F_SERVO_Channel = 2;
+//const int B_SERVO_Channel = 3;
+//const int R_SERVO_Channel = 4;
+//const int L_SERVO_Channel = 5;
 
 
-const int trig1 = 32;
+//const int trig1 = 32;
 
 const int JUNK_VAL = 7777;
 const int DIST_BUFF_SIZE = 20;
@@ -60,23 +61,17 @@ const int RIGHT = 1;
 const int FORWARD = 0;
 const int BACKARD = 0;
 
-// for DC motors
-// for Esp32 (DIFFERENT THAN ESPP8266/WEMOS)
-// setting PWM properties
+// ESP32 requires channels and ledc write for PWM control
+
 const int MOTOR_FREQ = 5000;
 const int SERVO_FREQ = 50;
 
-const int PWM_RESOLUTION = 8; // 10 bit resulation: speed until 1023 . Maybe 8? 
+const int PWM_RESOLUTION = 8; // 8 bits is enough (256 steps)
 const int min_PWM = 0;
-//int max_PWM = pow(2, PWM_RESOLUTION)-1;
+//int max_PWM = pow(2, PWM_RESOLUTION)-1; // for automation of bits num resolution
 
 const int SERVO_RANGE = 255; // pow(2,PWM_REOLUTION); // 255 ; // because 8 bit 
 
-// for Servo motors
-const int F_SERVO_Channel = 2;
-const int B_SERVO_Channel = 3;
-const int R_SERVO_Channel = 4;
-const int L_SERVO_Channel = 5;
 
 
 

@@ -1,6 +1,6 @@
 #include "WiFi.h"
 #include <esp_now.h>
-#include<tank_classes.cpp>
+#include<tank_classes.h>
 //#include <i2c_devices.h>
 //#include <Wire.h> // for I2C
 //#include "PCF8574.h"
@@ -51,14 +51,47 @@ void setup()
   Wire.begin();
 //my_dev.i2c_scanner();
 
+Servo servo1;
+Servo servo2;
+Servo servo3;
+Servo servo4;
+servo1.attach(F_SERVO_PWM_PIN);
+servo1.attach(B_SERVO_PWM_PIN);
+servo1.attach(R_SERVO_PWM_PIN);
+servo1.attach(L_SERVO_PWM_PIN);
+
+while(true) {
+for (int i=10;i<250;i+=10) {
+  servo1.write(i);
+  servo2.write(i);
+  servo3.write(i);
+  servo4.write(i);
+
+  Serial.print(i);
+  Serial.print(" . ");
+  delay(1000);
+}
+
+for (int i=250;i>0;i-=10) {
+  servo1.write(i);
+  servo2.write(i);
+  servo3.write(i);
+  servo4.write(i);
+
+    Serial.print(i);
+  Serial.print(" . ");
+  delay(1000);
+}
+
+}
+
 my_tank.i2c_devs.i2c_init();
 my_tank.tank_init_motors(M1_IN1_pin,M1_IN2_pin,PWM_Channel0,PWM_Channel1,M2_IN1_pin,M2_IN2_pin,PWM_Channel2,PWM_Channel3);
+my_tank.tank_init_servos();
 
-
-//my_tank.left_motor.init(M1_IN1_pin,PWM1_pin,PWM_Channel0,PWM_Channel1);
-//my_tank.right_motor.init(M2_IN1_pin,PWM2_pin,PWM_Channel2,PWM_Channel3);
-
-
+while(true) {
+  my_tank.f_servo.test_servo();
+}
 
 while (true) {
   //my_tank.test_moves();
@@ -132,24 +165,6 @@ while (true) {
    pinMode(BUZZER_pin, OUTPUT);
    
 
-// For the tank DC motors
-   // for ESP32 - different than ESp8266/WEMOS
-   // example from: https://randomnerdtutorials.com/esp32-pwm-arduino-ide/
-   // configure LED PWM functionalitites
-   // L_PWM_Channel,R_PWM_Channel are the pwm channels used 
-
-  //ledcSetup(L_PWM_Channel, MOTOR_FREQ, PWM_REOLUTION);
-  //ledcSetup(R_PWM_Channel, MOTOR_FREQ, PWM_REOLUTION);
-  
-  // attach the channel to the GPIO to be controlled
-  //ledcAttachPin(PWMA_pin, L_PWM_Channel);
-  //ledcAttachPin(PWMB_pin, R_PWM_Channel);
- 
-  //my_tank.tank_init_motors(AIN1_pin,AIN2_pin,PWMA_pin, L_PWM_Channel, BIN1_pin,BIN2_pin,PWMB_pin, R_PWM_Channel, STBY_pin);
-  Serial.println("in SETUP: init motors done");
-  //my_tank.tank_init_servos(F_SERVO_PWM_PIN,B_SERVO_PWM_PIN,R_SERVO_PWM_PIN,L_SERVO_PWM_PIN);
-  Serial.println("in SETUP: init servos done");
-
   
   digitalWrite(BUZZER_pin,HIGH); // we are ready to go !
   delay(1000);
@@ -167,9 +182,7 @@ while (true) {
   //    Serial.println("testing Sensor: Front");
 //   my_tank.test_sensor(my_tank.f_sensor,5,200);  // params: num of readings, delay 
 
-//   my_tank.set_motors_on();
-//   my_tank.test_moves();
-//   my_tank.set_motors_off();
+
 
    digitalWrite(LED_MOV_pin,HIGH); // we are ready to go !
    //my_tank.set_motors_on();
