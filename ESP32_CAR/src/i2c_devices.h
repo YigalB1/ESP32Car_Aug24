@@ -18,44 +18,45 @@ class i2c_devices{
       i2c_ext.pinMode(P5,OUTPUT); // LED3
       i2c_ext.pinMode(P6,OUTPUT); // LED4
       i2c_ext.pinMode(P7,OUTPUT); // LED5
-
-      for (int i=0;i<1;i++) {
-          Led1_Off();
-          Led2_Off();
-          Led3_Off();
-          delay(500);
-          Led1_On();
-          Led2_On();
-          Led3_On();
-          delay(500);
-      } // of for loop
-
+      i2c_ext.pinMode(P2,OUTPUT); // Buzzer
     } // of I2C_init
 
-    
+    void test_I2C_devs(){
+        Serial.println("Checking I2C devices (leds and buzzer)");
+        for (int i=0;i<6;i++) {
+            Buz_On();
+            Led_On(I2C_led1);
+            Led_On(I2C_led2);
+            Led_On(I2C_led3);
+            Led_On(I2C_led4);
+            Led_On(I2C_led5);
+            delay(500);
+            Buz_Off();
+            Led_Off(I2C_led1);
+            Led_Off(I2C_led2);
+            Led_Off(I2C_led3);
+            Led_Off(I2C_led4);
+            Led_Off(I2C_led5);
+            delay(500);
+        } // of for loop
+    } // of I2C_devices_check
 
-     void Led1_On() {
-        i2c_ext.digitalWrite(P3,LOW);
+
+     void Led_On(int _led) {
+        i2c_ext.digitalWrite(_led,LOW);
     } // of Led1_On()
 
-     void Led1_Off() {
-        i2c_ext.digitalWrite(P3,HIGH);
-    } // of Led1_Off()
-
-    void Led2_On() {
-        i2c_ext.digitalWrite(P4,LOW);
+     void Led_Off(int _led) {
+        i2c_ext.digitalWrite(_led,HIGH);
     } // of Led1_On()
 
-     void Led2_Off() {
-        i2c_ext.digitalWrite(P4,HIGH);
-    } // of Led1_Off()
 
-    void Led3_On() {
-        i2c_ext.digitalWrite(P5,LOW);
+    void Buz_On() {
+        i2c_ext.digitalWrite(I2C_buzzer,HIGH);
     } // of Led1_On()
 
-     void Led3_Off() {
-        i2c_ext.digitalWrite(P5,HIGH);
+     void Buz_Off() {
+        i2c_ext.digitalWrite(I2C_buzzer,LOW);
     } // of Led1_Off()
 
 

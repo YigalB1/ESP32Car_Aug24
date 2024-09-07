@@ -1,138 +1,7 @@
-//#include <tank_headers.h>
-//#include <motors.h>
-
-#include "WiFi.h"
-//#include <ESP32Servo.h>
-//#include <NewPing.h>
-#include <i2c_devices.h>
-#include <ESP32Servo.h>
+#include <motors.h>
+#include <tank_classes.h>
 
 
-
-
-// no need for this class? there is a servo class builtin
-class us_Servo {
-  public:
-  int s_channel = 77;
-  int s_pin = 777; 
-  int s_freq = 77777;
-  int s_resolution = 777777;
-  
-
-  void init(int _channel, int _pin, int _freq, int _resolution) {
-    s_channel = _channel;
-    s_pin = _pin;
-    s_freq = _freq;
-    s_resolution = _resolution;
-
-    ledcSetup(s_channel, s_freq, s_resolution);
-    ledcAttachPin(s_pin, s_channel);
-  }
-
-  void write_angle(int _angle) {
-      int val = map(_angle,0,180,0,255);
-     ledcWrite(s_channel, val);
-     Serial.println("");
-     Serial.print("  Angle: ");
-     Serial.print(_angle);
-     Serial.print("  value: ");
-     Serial.print(val);
-    Serial.print("  Channel: ");
-     Serial.print(s_channel);
-     Serial.print("  Pin: ");
-    Serial.print(s_pin);
-    Serial.print("  Freq: ");
-    Serial.print(s_freq);
-    Serial.print("  resolution: ");
-     Serial.println(s_resolution);
-     
-    
-  }
-
-  void test_servo() {
-    Serial.println("testing Servo");
-    Serial.print("   Channel: ");
-    Serial.print(s_channel);
-    Serial.print("   pin: ");
-    Serial.print(s_pin);
-    Serial.print("   freq: ");
-    Serial.print(s_freq);
-    Serial.print("   Resolution: ");
-    Serial.println(s_resolution);
-
-  Serial.println("Angle:");
-    
-    
-  
-    for (int angle=10;angle<180;angle+=20) {
-      write_angle(angle);
-      //Serial.print(angle);
-      //Serial.print(" . ");
-      delay(1000);
-    } // of for loop
-
-    for (int angle=170;angle>0;angle-=20) {
-      write_angle(angle);
-      //Serial.print(angle);
-      //Serial.print(" . ");
-      delay(1000);
-    } // of for loop
-  }
-
-  
-}; // of class us_servo
-
-
-class US_Sensor {
-  public:
-  int trig_pin;
-  int echo_pin;
-
-  void dum() {
-  } // of dum()
-
-  void init(int _trig, int _echo) {
-    //Serial.println("US init . Trig/echo: ");
-    trig_pin = _trig;
-    echo_pin = _echo;
-    pinMode(trig_pin, OUTPUT);
-    pinMode(echo_pin, INPUT);
-    //Serial.print("US init . Trig/echo: ");
-    //Serial.print(trig_pin);
-    //Serial.print("    ");
-    //Serial.println(echo_pin);
-
-  } 
-
-  int read_dist() {
-    float duration_us, distance_cm;
-
-    digitalWrite(trig_pin, LOW);
-    delayMicroseconds(2);
-    digitalWrite(trig_pin, HIGH);
-    delayMicroseconds(10);
-    digitalWrite(trig_pin, LOW);
-    duration_us  = pulseIn(echo_pin, HIGH);
-    distance_cm = 0.017 * duration_us;
-
-    return(distance_cm);
-  }
-}; // of Sensor class
-
-class led {
-  public:
-
-  void turn_led_on() {
-    digitalWrite(LED_MOV_pin,HIGH);
-  } // of turn_led_on()
-   
-    void turn_led_off() {
-    digitalWrite(LED_MOV_pin,LOW);
-  } // turn_led_off()
-}; // of LED class
-
-
-/*
 class Tank {
   public:
   Motor left_motor;
@@ -146,6 +15,12 @@ class Tank {
   US_Sensor r_sensor;
   US_Sensor l_sensor;
 
+    Servo servo1;
+    Servo servo2;
+    Servo servo3;
+    Servo servo4;
+
+// old sevos, to be deleted
   us_Servo f_servo; 
   us_Servo b_servo; 
   us_Servo r_servo; 
@@ -155,33 +30,56 @@ class Tank {
   bool STDBY = false; // power consumption mode. False: not in STBY mode (out signal is HIGH)
   bool motors_on = false;
 
-  void init_all() {
-    
+  void init_all() {  
     i2c_devs.i2c_init();
-    Serial.println("Checking I2C devices (leds and buzzer)");
-    i2c_devs.I2C_devices_check();
-    tank_init_us_sensors();
-    Serial.println("Checking US sensor");
-    while(true){
-      test_sensors();
-    };
-
-
+    init_us_sensors();
+    init_servos();
+    
   } // of init_all()
 
-  void tank_init_motors(int _in1_pin,int _in2_pin,int _chan_a,int _chan_b,int _in3_pin,int _in4_pin ,int _chan_c,int _chan_d) {  
+
+void init_servos() {
+    servo1.attach(F_SERVO_PWM_PIN);
+    servo1.attach(B_SERVO_PWM_PIN);
+    servo1.attach(R_SERVO_PWM_PIN);
+    servo1.attach(L_SERVO_PWM_PIN);
+} // of init_servos()
+
+void test_servosxxx() {
+    Serial.println(" testing Servos xxx");
+
+    for (int i=0;i<180;i+=20) {
+        servo1.write(i);
+        servo2.write(i);
+        servo3.write(i);
+        servo4.write(i);
+        Serial.print(i);
+        Serial.print(" . ");
+        delay(100);
+    } // of for loop
+
+    for (int i=180;i>0;i-=20) {
+    servo1.write(i);
+    servo2.write(i);
+    servo3.write(i);
+    servo4.write(i);
+
+    Serial.print(i);
+    Serial.print(" . ");
+    delay(100);
+    } // of for loop
+
+
+} // of test_servosxxx()
+
+
+  void init_motors(int _in1_pin,int _in2_pin,int _chan_a,int _chan_b,int _in3_pin,int _in4_pin ,int _chan_c,int _chan_d) {  
     left_motor.init(_in1_pin,_in2_pin,_chan_a,_chan_b);
     right_motor.init(_in3_pin,_in4_pin,_chan_c,_chan_d);
   }
 
-   void tank_init_servos() {
-    f_servo.init(F_Servo_PWM_Channel,F_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-    b_servo.init(B_Servo_PWM_Channel,B_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-    r_servo.init(R_Servo_PWM_Channel,R_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-    l_servo.init(L_Servo_PWM_Channel,L_SERVO_PWM_PIN,SERVO_FREQ,PWM_RESOLUTION);
-  } // of tank_init_servos()
 
-  void tank_init_us_sensors() {
+  void init_us_sensors() {
     //Serial.print(" // in tank_init_us_sensors() //  ");
     f_sensor.init(F_TRIG_PIN,F_ECHO_PIN);
     b_sensor.init(B_TRIG_PIN,B_ECHO_PIN);
@@ -366,14 +264,14 @@ class Tank {
         ratio=1;      
       else
         ratio = abs(int(_x/_y));
-
-    //  Serial.print("x / y / ratio : ");
-    //  Serial.print(_x);
-    //  Serial.print("  ");
-    //  Serial.print(_y);
-    //  Serial.print("  ");
-    //  Serial.println(ratio);
-      
+/*
+      Serial.print("x / y / ratio : ");
+      Serial.print(_x);
+      Serial.print("  ");
+      Serial.print(_y);
+      Serial.print("  ");
+      Serial.println(ratio);
+*/      
 
       if (_x>=0 && _y>0) {
         // 1Q
@@ -590,5 +488,4 @@ void test_sensors() {
 
 
 }; // of TANK class
-*/
 

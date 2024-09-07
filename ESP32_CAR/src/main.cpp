@@ -1,6 +1,8 @@
 #include "WiFi.h"
 #include <esp_now.h>
-#include<tank_classes.h>
+#include <tank.h>
+
+//#include<tank_classes.h>
 //#include <i2c_devices.h>
 //#include <Wire.h> // for I2C
 //#include "PCF8574.h"
@@ -33,10 +35,6 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   my_tank.tank_go_vector(myData.x_val,myData.y_val,myData.button_state,range);
 } // of OnDataRecv() 
 
-//PCF8574 i2c_ctrl(0x38);
-
-//i2c_devices my_dev;
-
 
 
 
@@ -47,71 +45,27 @@ void setup()
   Serial.print("");
   Serial.println("in SETUP: Starting");
 
-// Checking I2C
-  Wire.begin();
-//my_dev.i2c_scanner();
-
-Servo servo1;
-Servo servo2;
-Servo servo3;
-Servo servo4;
-servo1.attach(F_SERVO_PWM_PIN);
-servo1.attach(B_SERVO_PWM_PIN);
-servo1.attach(R_SERVO_PWM_PIN);
-servo1.attach(L_SERVO_PWM_PIN);
-
-while(true) {
-for (int i=10;i<250;i+=10) {
-  servo1.write(i);
-  servo2.write(i);
-  servo3.write(i);
-  servo4.write(i);
-
-  Serial.print(i);
-  Serial.print(" . ");
-  delay(1000);
-}
-
-for (int i=250;i>0;i-=10) {
-  servo1.write(i);
-  servo2.write(i);
-  servo3.write(i);
-  servo4.write(i);
-
-    Serial.print(i);
-  Serial.print(" . ");
-  delay(1000);
-}
-
-}
-
-my_tank.i2c_devs.i2c_init();
-my_tank.tank_init_motors(M1_IN1_pin,M1_IN2_pin,PWM_Channel0,PWM_Channel1,M2_IN1_pin,M2_IN2_pin,PWM_Channel2,PWM_Channel3);
-my_tank.tank_init_servos();
-
-while(true) {
-  my_tank.f_servo.test_servo();
-}
-
-while (true) {
-  //my_tank.test_moves();
-  my_tank.test_motors();
-};
-
-
-
-
-
-
-
-
-
-while (true) {
-
-  Serial.print(".");
   
-  delay(500);
-}
+  Wire.begin(); // start I2C
+  
+  my_tank.init_all();
+
+  
+
+
+
+
+  while(true) {
+    //my_tank.i2c_devs.test_I2C_devs();
+    //my_tank.test_sensors();
+    //my_tank.test_servosxxx();
+    my_tank.test_motors();
+    
+  };
+
+
+
+
   
   Serial.println("here 1");
   WiFi.mode(WIFI_MODE_STA);
@@ -143,14 +97,8 @@ while (true) {
   esp_now_register_recv_cb(OnDataRecv);
 
    // pinMode(LED_BUILTIN, OUTPUT);  
-//   pinMode(AIN1_pin, OUTPUT);
-//   pinMode(AIN2_pin, OUTPUT);
-   //pinMode(PWMA_pin, OUTPUT);  // done later as ledcAttachPin
-   //pinMode(BIN1_pin, OUTPUT);    // done later as ledcAttachPin
-   //pinMode(BIN2_pin, OUTPUT);
-   //pinMode(PWMB_pin, OUTPUT);
-   //pinMode(Spare_LED, OUTPUT);
 
+/*
    pinMode(F_TRIG_PIN, OUTPUT);
    pinMode(B_TRIG_PIN, OUTPUT);
    pinMode(R_TRIG_PIN, OUTPUT);
@@ -159,6 +107,7 @@ while (true) {
    pinMode(B_ECHO_PIN, INPUT);
    pinMode(R_ECHO_PIN, INPUT);
    pinMode(L_ECHO_PIN, INPUT);
+   */
    
    //pinMode(STBY_pin, OUTPUT);
    pinMode(LED_MOV_pin, OUTPUT);

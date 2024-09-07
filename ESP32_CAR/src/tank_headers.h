@@ -6,6 +6,17 @@
 #define M2_IN1_pin   23 
 #define M2_IN2_pin   19 
 
+#define I2C_led1 3
+#define I2C_led2 4
+#define I2C_led3 5
+#define I2C_led4 6
+#define I2C_led5 7
+
+
+#define I2C_buzzer 2
+
+
+
 const int PWM_Channel0 = 0;
 const int PWM_Channel1 = 1;
 const int PWM_Channel2 = 2;
@@ -33,12 +44,6 @@ const int L_Servo_PWM_Channel = 7;
 #define B_SERVO_PWM_PIN 33
 #define R_SERVO_PWM_PIN 25
 #define L_SERVO_PWM_PIN 26
-
-// for Servo motors
-//const int F_SERVO_Channel = 2;
-//const int B_SERVO_Channel = 3;
-//const int R_SERVO_Channel = 4;
-//const int L_SERVO_Channel = 5;
 
 
 //const int trig1 = 32;
@@ -71,11 +76,6 @@ const int min_PWM = 0;
 //int max_PWM = pow(2, PWM_RESOLUTION)-1; // for automation of bits num resolution
 
 const int SERVO_RANGE = 255; // pow(2,PWM_REOLUTION); // 255 ; // because 8 bit 
-
-
-
-
-
 
 const int ZERO  = 0;
 //const int LEFT_DIR  = 1; // it should have been like LEFT & RIGHT, but sto match the  real engine direction.
