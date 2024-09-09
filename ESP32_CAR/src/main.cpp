@@ -32,7 +32,7 @@ struct_message myData;
 // callback function that will be executed when data is received
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
-  my_tank.tank_go_vector(myData.x_val,myData.y_val,myData.button_state,range);
+  my_tank.go_vector(myData.x_val,myData.y_val,myData.button_state,range);
 } // of OnDataRecv() 
 
 
@@ -42,18 +42,13 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 void setup()
 {
   Serial.begin(9600);
+  Wire.begin(); // start I2C
   Serial.print("");
   Serial.println("in SETUP: Starting");
-
-  
-  Wire.begin(); // start I2C
   
   my_tank.init_all();
 
-  
-
-
-
+  my_tank.go_f_auto();
 
   while(true) {
     //my_tank.i2c_devs.test_I2C_devs();
@@ -148,7 +143,7 @@ void test_motors() {
   int tmp_delay = 2000;
   bool led_flag = false;
 
-  my_tank.tank_go_vector(0,0,0,SERVO_RANGE); // stop both engines
+  my_tank.go_vector(0,0,0,SERVO_RANGE); // stop both engines
   delay(500);
 
   Serial.println("Going forward");
@@ -165,12 +160,12 @@ void test_motors() {
     
     Serial.print("  y= ");
     Serial.print(y);
-    my_tank.tank_go_vector(0,y,0,SERVO_RANGE);   
+    my_tank.go_vector(0,y,0,SERVO_RANGE);   
     delay(tmp_delay);
   } // of for() loop
   Serial.println("Going BackWards");
 
-  my_tank.tank_go_vector(0,0,0,SERVO_RANGE); // stop both engines
+  my_tank.go_vector(0,0,0,SERVO_RANGE); // stop both engines
   delay(500);
 
   for (int y=0;abs(y)<SERVO_RANGE;y-=tmp_inc) {
@@ -186,7 +181,7 @@ void test_motors() {
 
     Serial.print("  y= ");
     Serial.print(y);
-    my_tank.tank_go_vector(0,y,0,-SERVO_RANGE);   
+    my_tank.go_vector(0,y,0,-SERVO_RANGE);   
     delay(tmp_delay);
   } // of for() loop
   //Serial.println("end of Y cycle, starting X cycle");
@@ -199,7 +194,7 @@ void test_tank() {
   for (int speed=0;speed<SERVO_RANGE;speed+=inc) {
     //Serial.print(speed);
     //Serial.print("  ");
-    my_tank.Tank_forward(speed);
+    my_tank.go_forward(speed);
     delay(2000);
   } // of for() 
 
@@ -209,7 +204,7 @@ void test_tank() {
   for (int speed=0;speed<SERVO_RANGE;speed+=inc) {
     //Serial.print(speed);
     //Serial.print("  ");
-    my_tank.Tank_backward(speed);
+    my_tank.go_backward(speed);
     delay(2000);
   } // of for()
   my_tank.tank_stop();

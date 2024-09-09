@@ -11,76 +11,6 @@
 
 
 // no need for this class? there is a servo class builtin
-class us_Servo {
-  public:
-  int s_channel = 77;
-  int s_pin = 777; 
-  int s_freq = 77777;
-  int s_resolution = 777777;
-  
-
-  void init(int _channel, int _pin, int _freq, int _resolution) {
-    s_channel = _channel;
-    s_pin = _pin;
-    s_freq = _freq;
-    s_resolution = _resolution;
-
-    ledcSetup(s_channel, s_freq, s_resolution);
-    ledcAttachPin(s_pin, s_channel);
-  }
-
-  void write_angle(int _angle) {
-      int val = map(_angle,0,180,0,255);
-     ledcWrite(s_channel, val);
-     Serial.println("");
-     Serial.print("  Angle: ");
-     Serial.print(_angle);
-     Serial.print("  value: ");
-     Serial.print(val);
-    Serial.print("  Channel: ");
-     Serial.print(s_channel);
-     Serial.print("  Pin: ");
-    Serial.print(s_pin);
-    Serial.print("  Freq: ");
-    Serial.print(s_freq);
-    Serial.print("  resolution: ");
-     Serial.println(s_resolution);
-     
-    
-  }
-
-  void test_servo() {
-    Serial.println("testing Servo");
-    Serial.print("   Channel: ");
-    Serial.print(s_channel);
-    Serial.print("   pin: ");
-    Serial.print(s_pin);
-    Serial.print("   freq: ");
-    Serial.print(s_freq);
-    Serial.print("   Resolution: ");
-    Serial.println(s_resolution);
-
-  Serial.println("Angle:");
-    
-    
-  
-    for (int angle=10;angle<180;angle+=20) {
-      write_angle(angle);
-      //Serial.print(angle);
-      //Serial.print(" . ");
-      delay(1000);
-    } // of for loop
-
-    for (int angle=170;angle>0;angle-=20) {
-      write_angle(angle);
-      //Serial.print(angle);
-      //Serial.print(" . ");
-      delay(1000);
-    } // of for loop
-  }
-
-  
-}; // of class us_servo
 
 
 class US_Sensor {
@@ -112,7 +42,8 @@ class US_Sensor {
     digitalWrite(trig_pin, HIGH);
     delayMicroseconds(10);
     digitalWrite(trig_pin, LOW);
-    duration_us  = pulseIn(echo_pin, HIGH);
+    duration_us  = pulseIn(echo_pin, HIGH,3000 );
+    // 3000 is about 50 cm' according to: 50cm = 0.017 * 3000;
     distance_cm = 0.017 * duration_us;
 
     return(distance_cm);

@@ -50,15 +50,17 @@ const int L_Servo_PWM_Channel = 7;
 
 const int JUNK_VAL = 7777;
 const int DIST_BUFF_SIZE = 20;
-const int VERY_CLOSE = 23;
-const int CLOSE = 23;
+const int VERY_CLOSE = 15;
+const int FAR = 50;
+const int CLOSE = 20;
 const int IN_RANGE = 40;
 const int MIN_SPEED = 120; // was 120
-const int MAX_SPEED = 1023; // MAX is 1023
+const int MAX_SPEED = 255; // MAX is 1023
+const int START_SPEED = 180; // 
 const int SPEED_INC = 50;
 const int TIME_IN_STATION = 1500;
 const int SAMPLE_TIME = 200; // time for loop to wait between each cycle
-const int MAX_DISTANCE = 99;
+//const int MAX_DISTANCE = 99;
 
 
 const int LEFT  = 0;
