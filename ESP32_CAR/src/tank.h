@@ -66,7 +66,7 @@ class Tank {
     i2c_devs.i2c_init();
     init_motors();
     init_us_sensors();
-    // init_servos(); // init servos requires more power from the cpu
+    init_servos(); // init servos requires more power from the cpu
     
   } // of init_all()
 
@@ -91,7 +91,7 @@ void test_servos() {
         servo4.write(i);
         Serial.print(i);
         Serial.print(" . ");
-        delay(100);
+        delay(400);
     } // of for loop
 
     for (int i=180;i>0;i-=20) {
@@ -101,8 +101,8 @@ void test_servos() {
     servo4.write(i);
 
     Serial.print(i);
-    Serial.print(" . ");
-    delay(100);
+    Serial.print(" ... ");
+    delay(400);
     } // of for loop
 
 
