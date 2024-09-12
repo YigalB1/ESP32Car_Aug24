@@ -48,10 +48,11 @@ void setup()
   
   my_tank.init_all();
 
+/*
 while(true) {
   my_tank.test_servos();
 }
-
+*/
 
   my_tank.go_f_auto();
 

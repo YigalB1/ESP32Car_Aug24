@@ -34,6 +34,9 @@ class Tank {
         int start_speed = START_SPEED;
         Serial.print("in go_f_auto    "); 
 
+        i2c_devs.led_green_on();
+        i2c_devs.led_yellow_off();
+        i2c_devs.led_red_off();
         go_forward(start_speed);
         
         while(true) {
@@ -49,6 +52,9 @@ class Tank {
                 go_forward(start_speed);
             }
             else {
+                i2c_devs.led_green_off();
+                i2c_devs.led_yellow_on();
+                i2c_devs.led_red_off();
                 go_left_pivot(start_speed);
             }
 

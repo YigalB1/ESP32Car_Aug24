@@ -21,6 +21,15 @@ class i2c_devices{
       i2c_ext.pinMode(P2,OUTPUT); // Buzzer
     } // of I2C_init
 
+    void led_green_on() {Led_On(I2C_led1);}
+    void led_green_off() {Led_Off(I2C_led1);}
+    void led_yellow_on() {Led_On(I2C_led2);}
+    void led_yellow_off() {Led_Off(I2C_led2);}
+    void led_red_on() {Led_On(I2C_led3);}
+    void led_red_off() {Led_Off(I2C_led3);}
+    
+
+
     void test_I2C_devs(){
         Serial.println("Checking I2C devices (leds and buzzer)");
         for (int i=0;i<6;i++) {
