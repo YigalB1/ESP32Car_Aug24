@@ -49,14 +49,14 @@ class Tank {
 
 
             if (f_cur_dist>CLOSE){
-                go_forward(start_speed);
-            }
+                go_forward(MAX_SPEED);
+            } // of if()
             else {
                 i2c_devs.led_green_off();
                 i2c_devs.led_yellow_on();
                 i2c_devs.led_red_off();
-                go_left_pivot(start_speed);
-            }
+                go_left_pivot(MAX_SPEED);
+            } // of else()
 
         delay(500);
         } // of while loop
@@ -72,7 +72,7 @@ class Tank {
     i2c_devs.i2c_init();
     init_motors();
     init_us_sensors();
-    init_servos(); // init servos requires more power from the cpu
+    //init_servos(); // init servos requires more power from the cpu
     
   } // of init_all()
 

@@ -11,8 +11,8 @@ walls_h = 10; // was 30
 
 // w = 19.2 l = 120
 
-base_bat_plate() ;
-//base_pcb_plate() ;
+//base_bat_plate() ;
+base_pcb_plate() ;
 
 
 module base_pcb_plate() {
@@ -20,22 +20,28 @@ module base_pcb_plate() {
     difference() {
         union() {
             color("red") cube([base_l,base_w,base_h],center=true);  
-            translate([-50+10,30+8,0]) pcb_holes();    
-            translate([-40,-40,0]) connect_holes(base_l,base_w);
+            //translate([-50+10,30+8,0]) pcb_holes();    
+            
         } // of union()
         
+        // the holes arround, general purpose
+        translate([-40,-40,0]) connect_holes(base_l,base_w);
+        
+        // the larger holes in the middle
         for (j = [-base_l/2+5:30:base_l/2-30]){
             for (i = [-20,0,20]){
             translate([j+20,i,-5]) cylinder(d=10,h=10,$fn=60);
             } // of inner FOR
         } // of outer FOR
-        
-        
+                
         //translate([-50+10,30+8,0]) pcb_holes();
         
-        translate([-40,-40,0]) connect_holes(base_l,base_w);
+        //translate([-40,-40,0]) connect_holes(base_l,base_w);
         
     } // of difference()
+    
+    // screw holders
+    translate([-50+10,30+8,0]) pcb_screw_holders();    
 } // of base_pcb_plate()
 
 

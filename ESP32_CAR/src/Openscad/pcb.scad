@@ -9,16 +9,13 @@ connect_holes(); // connect tocar
 
 
 
-module pcb_holes() {    
-    translate([4-0.5,-70+2,0])  screw_holder();
-    translate([7.3,-5+2,0])     screw_holder();
-    translate([63.2,-17+0.2,0]) screw_holder();
-    translate([78,-75.9,0])     screw_holder();
+module pcb_screw_holders() {    
+    h_shift=1;
+    translate([4-0.5,-70+2,-h_shift])  screw_holder();
+    translate([7.3,-5+2,-h_shift])     screw_holder();
+    translate([63.2,-17+0.2,-h_shift]) screw_holder();
+    translate([78,-75.9,0+-h_shift])   screw_holder();
 } // of pcb_holes()
-
-
-
-
 
 module connect_holes(_l=30,_w=10) {
     // holes to connect to the car and optional
@@ -46,27 +43,7 @@ module connect_holes(_l=30,_w=10) {
         translate([_l-30,i,0]) color("green")  cyl3();
         
     }    
-    
-    /*
-    // basic holes to connect to the car
-    dx = 85.2;
-    dy = 80.2;
-    
-    color("cyan") translate([0,0,0])   cyl3();
-    color("cyan") translate([dx,0,0])  cyl3();
-    color("cyan") translate([dx,dy,0]) cyl3();
-    color("cyan") translate([0,dy,0])  cyl3();
-    
 
-    
-    ddx=25;
-    
-    color("green") translate([-ddx,0,0])   cyl3();
-    color("green") translate([dx+ddx,0,0])  cyl3();
-    color("green") translate([dx+ddx,dy,0]) cyl3();
-    color("green") translate([-ddx,dy,0])  cyl3();
-    
-    */
     
 } // of connect_holes()
 
