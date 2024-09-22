@@ -41,24 +41,27 @@ class Tank {
         
         while(true) {
             f_cur_dist = f_sensor.read_dist();
+            Serial.print(f_cur_dist); 
+            Serial.print("  /  "); 
 
             if (f_cur_dist==0)
                 f_cur_dist=FAR;
             Serial.print(f_cur_dist); 
-            Serial.print("  .  "); 
-
-
+            Serial.print("  /  "); 
+            
             if (f_cur_dist>CLOSE){
                 go_forward(MAX_SPEED);
+                Serial.print("  f  "); 
             } // of if()
             else {
+                Serial.print("  pivot  "); 
                 i2c_devs.led_green_off();
                 i2c_devs.led_yellow_on();
                 i2c_devs.led_red_off();
                 go_left_pivot(MAX_SPEED);
             } // of else()
-
-        delay(500);
+        Serial.println("    ..."); 
+        delay(200);
         } // of while loop
     // TBD: write - get input from sensor and turn accordingly
     } // go_auto_F()

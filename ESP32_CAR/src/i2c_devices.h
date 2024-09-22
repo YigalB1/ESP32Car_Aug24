@@ -27,6 +27,11 @@ class i2c_devices{
     void led_yellow_off() {Led_Off(I2C_led2);}
     void led_red_on() {Led_On(I2C_led3);}
     void led_red_off() {Led_Off(I2C_led3);}
+    void leds_ctrl(bool _green, bool _yellow,bool _red) {
+        if (_green==true) led_green_on(); else led_green_off();
+        if (_yellow==true) led_yellow_on(); else led_yellow_off();
+        if (_red==true) led_red_on(); else led_red_off();
+    } // of leds_ctrl
     
 
 

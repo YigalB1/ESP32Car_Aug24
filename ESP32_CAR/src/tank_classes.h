@@ -27,11 +27,6 @@ class US_Sensor {
     echo_pin = _echo;
     pinMode(trig_pin, OUTPUT);
     pinMode(echo_pin, INPUT);
-    //Serial.print("US init . Trig/echo: ");
-    //Serial.print(trig_pin);
-    //Serial.print("    ");
-    //Serial.println(echo_pin);
-
   } 
 
   int read_dist() {

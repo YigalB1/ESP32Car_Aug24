@@ -47,6 +47,8 @@ void setup()
   Serial.println("in SETUP: Starting");
   
   my_tank.init_all();
+  my_tank.i2c_devs.leds_ctrl(true,true,true); // red, yellow, green
+  delay(1000);
 
 /*
 while(true) {
